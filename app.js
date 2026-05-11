@@ -33,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const proBadge = document.querySelector('.pro-badge-large');
   const proMsg = document.querySelector('.pro-header span:nth-child(2)');
   const proCard = document.getElementById('pro-card');
+  const homeLink = document.getElementById('home-link');
+  const btnBack = document.getElementById('btn-back');
 
   let currentData = null;
+
+  // Back button handling: popstate means user pressed back → go to upload view
+  window.addEventListener('popstate', () => resetView());
 
   // Check saved PRO key
   const saved = localStorage.getItem('kindleexporter_pro');
@@ -81,10 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Display results ──────────────────────────────────
 
+  function resetView() {
+    uploadCard.style.display = 'block';
+    resultsCard.style.display = 'none';
+    currentData = null;
+    bookList.innerHTML = '';
+    if (homeLink) homeLink.style.display = 'none';
+  }
+
+  // Back button click
+  if (btnBack) {
+    btnBack.addEventListener('click', (e) => { e.preventDefault(); history.back(); });
+  }
+
   function showResults(result) {
     currentData = result;
     uploadCard.style.display = 'none';
     resultsCard.style.display = 'block';
+
+    // Show back link
+    if (homeLink) homeLink.style.display = 'block';
+    // Replace state so back button returns to upload view
+    history.pushState(null, '');
 
     const totalHighlights = result.books.reduce((sum, b) => sum + b.highlights.length, 0);
     const totalNotes = result.books.reduce((sum, b) => sum + b.notes.length, 0);
@@ -261,6 +284,8 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
     bookList.innerHTML = `<div class="error">${escapeHTML(msg)}</div>`;
     bookCount.textContent = 'Error';
     highlightCount.textContent = '';
+    if (homeLink) homeLink.style.display = 'block';
+    history.pushState(null, '');
   }
 
   function escapeHTML(str) {
