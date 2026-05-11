@@ -34,6 +34,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const proMsg = document.querySelector('.pro-header span:nth-child(2)');
   const proCard = document.getElementById('pro-card');
   const homeLink = document.getElementById('home-link');
+  const MAX_DEVICES = 3;
+
+  // Generate a unique device ID (persists in localStorage)
+  function getDeviceId() {
+    let id = localStorage.getItem('khe_device_id');
+    if (!id) {
+      id = 'DEVICE-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      localStorage.setItem('khe_device_id', id);
+    }
+    return id;
+  }
+
+  // Track device count per key (anti-sharing deterrent)
+  function checkDeviceLimit(key) {
+    const registry = JSON.parse(localStorage.getItem('khe_key_registry') || '{}');
+    if (!registry[key]) {
+      registry[key] = { devices: [], firstSeen: new Date().toISOString() };
+    }
+    const entry = registry[key];
+    const deviceId = getDeviceId();
+    if (!entry.devices.includes(deviceId)) {
+      entry.devices.push(deviceId);
+    }
+    localStorage.setItem('khe_key_registry', JSON.stringify(registry));
+    return entry.devices.length <= MAX_DEVICES;
+  }
   const btnBack = document.getElementById('btn-back');
 
   let currentData = null;
@@ -252,19 +278,23 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
 
   btnActivate.addEventListener('click', () => {
     const key = proKeyInput.value.trim().toUpperCase();
-    if (validateProKey(key)) {
-      isPro = true;
-      if (proBadge) proBadge.textContent = '✓ PRO';
-      if (proMsg) proMsg.textContent = 'PRO activated — unlimited exports unlocked';
-      document.querySelectorAll('#btn-show-pro, #btn-show-pro2').forEach(b => {
-        b.textContent = '✅ Activated';
-        b.style.background = '#10b981';
-      });
-      proModal.style.display = 'none';
-      localStorage.setItem('kindleexporter_pro', key);
-    } else {
+    if (!validateProKey(key)) {
       alert('Invalid PRO key. Enter a valid key purchased from our store.');
+      return;
     }
+    if (!checkDeviceLimit(key)) {
+      alert(`This key has been activated on too many devices (max ${MAX_DEVICES}).`);
+      return;
+    }
+    isPro = true;
+    if (proBadge) proBadge.textContent = '✓ PRO';
+    if (proMsg) proMsg.textContent = 'PRO activated — unlimited exports unlocked';
+    document.querySelectorAll('#btn-show-pro, #btn-show-pro2').forEach(b => {
+      b.textContent = '✅ Activated';
+      b.style.background = '#10b981';
+    });
+    proModal.style.display = 'none';
+    localStorage.setItem('kindleexporter_pro', key);
   });
 
   // ─── Helpers ──────────────────────────────────────────
