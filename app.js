@@ -168,16 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       if (!currentData) return;
       const format = btn.dataset.format;
-      let books = currentData.books;
-
-      if (!isPro && books.length > 1) {
-        document.getElementById('pro-modal').style.display = 'flex';
-        return;
-      }
-
-      if (!isPro) {
-        books = [books[0]];
-      }
+      let books = isPro ? currentData.books : [currentData.books[0]];
 
       let content, filename, mime;
       if (format === 'md') {
