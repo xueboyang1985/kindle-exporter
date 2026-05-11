@@ -122,10 +122,14 @@ body {
 .highlight-note::before { content: "📝 "; }
 
 /* Example Card */
-.example-card summary {
-  cursor: pointer; font-size: 14px; color: #888; font-weight: 500;
+.example-card { text-align: center; }
+.example-text { font-size: 14px; color: #888; margin-bottom: 12px; }
+.btn-sample {
+  padding: 10px 24px; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  background: #f0f0f0; color: #555; transition: all .15s;
 }
-.example-card summary:hover { color: #555; }
+.btn-sample:hover { background: #e0e0e0; transform: translateY(-1px); }
 
 /* Footer */
 .footer { text-align: center; padding: 32px 0 16px; }
