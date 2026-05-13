@@ -67,9 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Back button handling: popstate means user pressed back → go to upload view
   window.addEventListener('popstate', () => resetView());
 
-  // Check saved PRO key
+  // Check saved PRO key (offline or Gumroad-activated)
   const saved = localStorage.getItem('kindleexporter_pro');
-  if (saved && validateProKey(saved)) {
+  const proActivated = localStorage.getItem('khe_pro_activated') === 'true';
+  if (proActivated && saved) {
+    isPro = true;
+  } else if (saved && validateProKey(saved)) {
     isPro = true;
     if (proBadge) proBadge.textContent = '✓ PRO';
     if (proMsg) proMsg.textContent = 'PRO activated — unlimited exports unlocked';
@@ -343,6 +346,7 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
     });
     proModal.style.display = 'none';
     localStorage.setItem('kindleexporter_pro', key);
+    localStorage.setItem('khe_pro_activated', 'true');
   }
 
   // ─── Helpers ──────────────────────────────────────────
