@@ -67,12 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Back button handling: popstate means user pressed back → go to upload view
   window.addEventListener('popstate', () => resetView());
 
-  // Check saved PRO key (offline or Gumroad-activated)
+  // Check saved PRO key
   const saved = localStorage.getItem('kindleexporter_pro');
-  const proActivated = localStorage.getItem('khe_pro_activated') === 'true';
-  if (proActivated && saved) {
-    isPro = true;
-  } else if (saved && validateProKey(saved)) {
+  if (saved && validateProKey(saved)) {
     isPro = true;
     if (proBadge) proBadge.textContent = '✓ PRO';
     if (proMsg) proMsg.textContent = 'PRO activated — unlimited exports unlocked';
@@ -279,18 +276,6 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
   document.getElementById('modal-close').addEventListener('click', () => { proModal.style.display = 'none'; });
   proModal.addEventListener('click', (e) => { if (e.target === proModal) proModal.style.display = 'none'; });
 
-  const btnBuyPro = document.getElementById('btn-buy-pro');
-  if (btnBuyPro) {
-    btnBuyPro.addEventListener('click', (e) => {
-      e.preventDefault();
-      const w = Math.min(600, window.innerWidth - 40);
-      const h = Math.min(700, window.innerHeight - 40);
-      const left = Math.max(0, (window.innerWidth - w) / 2);
-      const top = Math.max(0, (window.innerHeight - h) / 2);
-      window.open('https://xuebo8.gumroad.com/l/iwropv', 'gumroad-checkout', `width=${w},height=${h},left=${left},top=${top},menubar=no,toolbar=no,status=no`);
-    });
-  }
-
   btnActivate.addEventListener('click', async () => {
     const key = proKeyInput.value.trim().toUpperCase();
     if (!key) { alert('Enter a PRO key first.'); return; }
@@ -346,7 +331,6 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
     });
     proModal.style.display = 'none';
     localStorage.setItem('kindleexporter_pro', key);
-    localStorage.setItem('khe_pro_activated', 'true');
   }
 
   // ─── Helpers ──────────────────────────────────────────
