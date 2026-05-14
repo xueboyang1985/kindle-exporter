@@ -278,15 +278,15 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
 
   const btnBuyPro = document.getElementById('btn-buy-pro');
   if (btnBuyPro) {
-    btnBuyPro.addEventListener('click', (e) => {
-      e.preventDefault();
+    btnBuyPro.addEventListener('click', () => {
+      const url = btnBuyPro.dataset.gumroad;
+      if (!url) return;
       const w = Math.min(600, window.innerWidth - 40);
       const h = Math.min(700, window.innerHeight - 40);
       const left = Math.max(0, (window.innerWidth - w) / 2);
       const top = Math.max(0, (window.innerHeight - h) / 2);
-      const win = window.open('https://xuebo8.gumroad.com/l/iwropv', 'gumroad-checkout',
-        `width=${w},height=${h},left=${left},top=${top},menubar=no,toolbar=no,status=no`);
-      if (!win) window.location.href = 'https://xuebo8.gumroad.com/l/iwropv';
+      const win = window.open(url, 'gumroad-checkout', `width=${w},height=${h},left=${left},top=${top},menubar=no,toolbar=no,status=no`);
+      if (!win) window.location.href = url;
     });
   }
 
