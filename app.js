@@ -346,6 +346,7 @@ Great quote for presentations. Emphasizes that good design is invisible — bad 
     });
     proModal.style.display = 'none';
     localStorage.setItem('kindleexporter_pro', key);
+    localStorage.setItem('kindleexporter_pro_activated', 'true');
   }
 
   // ─── Helpers ──────────────────────────────────────────
