@@ -69,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check saved PRO key
   const saved = localStorage.getItem('kindleexporter_pro');
-  if (saved && validateProKey(saved)) {
+  const activated = localStorage.getItem('kindleexporter_pro_activated') === 'true';
+  if (saved && (activated || validateProKey(saved))) {
     isPro = true;
     if (proBadge) proBadge.textContent = '✓ PRO';
     if (proMsg) proMsg.textContent = 'PRO activated — unlimited exports unlocked';
